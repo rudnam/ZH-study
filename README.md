@@ -11,7 +11,7 @@ Changes:
 
 - Displays Traditional instead of Simplified
 - Added tone coloring
-- Uses Zhuyin instead of Pinyin (Generated using [Chinese Support 3](https://ankiweb.net/shared/info/1752008591))
+- Uses Zhuyin instead of Pinyin
 - Slightly modified layout
 
 [Download Link](https://drive.google.com/file/d/1SpR2q5mZ1KW5Oo-kTHgVZ4g1vfL9xVbM/view?usp=sharing)
