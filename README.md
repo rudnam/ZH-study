@@ -41,12 +41,12 @@ Anki Mining card template for Chinese.
 Notes:
 
 - When the **\*IsSentenceCard** field is filled with any character, card is turned into a sentence card. When empty, it is turned into a vocab card.
-- The **MainDefinition** field is for the displayed definition on the card. When empty, the template displays a definition from the **FullDefinition** field. The preferred dictionaries for the default definition can be changed in the [back template](https://github.com/rudnam/JP-study/blob/da0fcca7242513065a5706b58e089a38baab584e/2_Mining_Back.html#L653-L667).
+- The **MainDefinition** field is for the displayed definition on the card. When empty, the template displays a definition from the **FullDefinition** field. The preferred dictionaries for the default definition can be changed in the [back template](https://github.com/rudnam/ZH-study/blob/main/2_Mining_Back.html#L601-L606).
 - The **FreqSort** field is for frequency sorting. (See [freq](https://github.com/MarvNC/JP-Resources#sorting-mined-anki-cards-by-frequency)).
 - The **Hint** field is for a hint on the front of the card (See [Animecards](https://animecards.site/ankicards/#the-hint-field)).
 - The furigana fields only take in plain furigana. (e.g. 汉字[hànzì] not <ruby>汉字<rt>hànzì</rt></ruby>).
 - The automatic tone coloring _should_ work for Zhuyin and Pinyin.
-- The character set (default is Traditional Chinese) can be changed in the [back template]().
+- The character set (default is Traditional Chinese) can be changed in the [back template](https://github.com/rudnam/ZH-study/blob/main/2_Mining_Back.html#L593).
 
 ### Other applications
 
