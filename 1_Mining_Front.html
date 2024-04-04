@@ -1,0 +1,21 @@
+<!---------- Header ------------->
+<header style="visibility: hidden"></header>
+
+<main>
+  <!--------- Vocab card ---------->
+  {{^*IsSentenceCard}}
+  <div lang="zh-Hant" class="vocab">{{Expression}}</div>
+  {{#Hint}}
+  <div id="hint">{{Hint}}</div>
+  {{/Hint}} {{/*IsSentenceCard}}
+
+  <!------- Sentence card --------->
+  {{#*IsSentenceCard}}
+  <div lang="zh-Hant" class="sentence">
+    {{#SentenceFurigana}} {{kanji:SentenceFurigana}} {{/SentenceFurigana}}
+    {{^SentenceFurigana}} {{kanji:Sentence}} {{/SentenceFurigana}}
+  </div>
+  {{#Hint}}
+  <div id="hint">{{Hint}}</div>
+  {{/Hint}} {{/*IsSentenceCard}}
+</main>

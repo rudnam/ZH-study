@@ -1,7 +1,90 @@
 # ZH-study
 
+- [Anki Mining Template](#anki-mining-template)
 - [Traditional HSK Deck](#traditional-hsk-deck)
 - [Zhuyin Yomitan Dictionaries](#zhuyin-yomitan-dictionaries)
+
+## Anki Mining Template
+
+Anki Mining card template for Chinese.
+
+[Download](https://github.com/rudnam/ZH-study/raw/main/Mining_temp.apkg)
+
+<p align="center">
+    <img src="./images/vocab_back.png" width="70%" />
+    <img src="./images/sentence_back.png" width="70%" />
+    <img src="./images/mining_template.gif" width="70%" />
+</p>
+
+### Yomichan fields
+
+| Field              | Value                                             |
+| ------------------ | ------------------------------------------------- |
+| Expression         | `{expression}`                                    |
+| ExpressionFurigana | `{furigana-plain}`                                |
+| ExpressionReading  | `{reading}`                                       |
+| ExpressionAudio    | `{audio}`                                         |
+| MainDefinition     | `{selection-text}`                                |
+| Sentence           | `{cloze-prefix}<b>{cloze-body}</b>{cloze-suffix}` |
+| SentenceFurigana   |                                                   |
+| SentenceAudio      |                                                   |
+| Hint               |                                                   |
+| FullDefinition     | `{glossary}`                                      |
+| Image              |                                                   |
+| Translation        |                                                   |
+| Frequency          | `{frequencies}`                                   |
+| FreqSort           |                                                   |
+| MiscInfo           | `{document-title}`                                |
+| ExtraField         |                                                   |
+| \*IsSentenceCard   |                                                   |
+
+Notes:
+
+- When the **\*IsSentenceCard** field is filled with any character, card is turned into a sentence card. When empty, it is turned into a vocab card.
+- The **MainDefinition** field is for the displayed definition on the card. When empty, the template displays a definition from the **FullDefinition** field. The preferred dictionaries for the default definition can be changed in the [back template](https://github.com/rudnam/JP-study/blob/da0fcca7242513065a5706b58e089a38baab584e/2_Mining_Back.html#L653-L667).
+- The **FreqSort** field is for frequency sorting. (See [freq](https://github.com/MarvNC/JP-Resources#sorting-mined-anki-cards-by-frequency)).
+- The **Hint** field is for a hint on the front of the card (See [Animecards](https://animecards.site/ankicards/#the-hint-field)).
+- The furigana fields only take in plain furigana. (e.g. 汉字[hànzì] not <ruby>汉字<rt>hànzì</rt></ruby>).
+- The automatic tone coloring _should_ work for Zhuyin and Pinyin.
+- The character set (default is Traditional Chinese) can be changed in the [back template]().
+
+### Other applications
+
+More info can be added using other applications.
+
+- For [mpvacious](https://github.com/Ajatt-Tools/mpvacious), fields can be filled like the following. In `subs2srs.conf`:
+
+  ```
+  model_name=Mining-ZH
+
+  sentence_field=Sentence
+  secondary_field=Translation
+  audio_field=SentenceAudio
+  image_field=Image
+  miscinfo_field=MiscInfo
+
+  # The tag(s) added to new notes. Spaces separate multiple tags.
+  note_tag=subs2srs 动画::%n
+  ```
+
+- For [jidoujisho](https://github.com/lrorpilla/jidoujisho), fields can be filled like the following:
+
+  | Field              | Value          |
+  | ------------------ | -------------- |
+  | Expression         | Term           |
+  | ExpressionFurigana | Furigana       |
+  | ExpressionReading  | Reading        |
+  | ExpressionAudio    | Term Audio     |
+  | Sentence           | Sentence       |
+  | SentenceAudio      | Sentence Audio |
+  | FullDefinition     | Meaning        |
+  | Image              | Image          |
+  | FreqSort           | Frequency      |
+  | MiscInfo           | Context        |
+
+  - [x] Include image/audio HTML tags on export
+  - [x] Use line break tag instead of newline on export
+  - [x] Prepend dictionary name in meaning
 
 ## Traditional HSK Deck
 

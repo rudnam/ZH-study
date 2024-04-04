@@ -1,0 +1,613 @@
+<!---------- Header ------------->
+<header>
+  <div class="top-container">
+    <p class="stars"></p>
+    {{FreqSort}}
+  </div>
+</header>
+
+<main>
+  <div class="template">
+    <!--------- Vocab card ---------->
+    {{^*IsSentenceCard}}
+    <div lang="zh-Hant" class="show-furigana vocab">
+      {{#ExpressionFurigana}}{{furigana:ExpressionFurigana}}{{/ExpressionFurigana}}
+      {{^ExpressionFurigana}}{{Expression}}{{/ExpressionFurigana}}
+    </div>
+    {{#Hint}}
+    <div id="hint">{{Hint}}</div>
+    {{/Hint}}
+    <hr class="divider" />
+    <div lang="zh-Hant" class="info">
+      {{ExpressionAudio}} {{SentenceAudio}}
+      <div class="reading">
+        {{#ExpressionFurigana}}{{kana:ExpressionFurigana}}{{/ExpressionFurigana}}
+        {{^ExpressionFurigana}}{{ExpressionReading}}{{/ExpressionFurigana}}
+      </div>
+      【{{Expression}}】
+    </div>
+    <div lang="zh-Hant" class="main-def popup">
+      <div class="definition">{{MainDefinition}}</div>
+      <div class="def-info"></div>
+    </div>
+    <br />
+    <div class="image">{{Image}}</div>
+    <div lang="zh-Hant" class="small-sentence">
+      {{#SentenceFurigana}} {{furigana:SentenceFurigana}} {{/SentenceFurigana}}
+      {{^SentenceFurigana}} {{furigana:Sentence}} {{/SentenceFurigana}}
+    </div>
+    {{#Translation}}
+    <div class="translation" lang="en">{{hint:Translation}}</div>
+    {{/Translation}} {{/*IsSentenceCard}}
+
+    <!------- Sentence card --------->
+    {{#*IsSentenceCard}}
+    <div lang="zh-Hant" class="sentence">
+      {{#SentenceFurigana}} {{furigana:SentenceFurigana}} {{/SentenceFurigana}}
+      {{^SentenceFurigana}} {{furigana:Sentence}} {{/SentenceFurigana}}
+    </div>
+    {{#Hint}}
+    <div id="hint">{{Hint}}</div>
+    {{/Hint}} {{#Translation}}
+    <div class="translation" lang="en">{{hint:Translation}}</div>
+    {{/Translation}}
+    <hr class="divider" />
+    <div lang="zh-Hant" class="info">
+      {{ExpressionAudio}} {{SentenceAudio}}
+      <div class="reading">
+        {{#ExpressionFurigana}}{{kana:ExpressionFurigana}}{{/ExpressionFurigana}}
+        {{^ExpressionFurigana}}{{ExpressionReading}}{{/ExpressionFurigana}}
+      </div>
+      【{{Expression}}】
+    </div>
+    <div lang="zh-Hant" class="main-def popup">
+      <div class="definition">{{MainDefinition}}</div>
+      <div class="def-info"></div>
+    </div>
+    <br />
+    <div class="image">{{Image}}</div>
+    {{/*IsSentenceCard}}
+
+    <!------- Image modal --------->
+    <div class="modal-bg"></div>
+    <div class="img-popup"></div>
+  </div>
+
+  <div class="extras">
+    {{#MiscInfo}}
+    <div style="text-align: center">
+      <div lang="zh-Hant">
+        <details>
+          <summary>Misc. info</summary>
+          <div class="misc-info popup">
+            === Details ===
+            <br />
+            {{MiscInfo}} {{#Frequency}}
+            <br />
+            == Frequency == {{Frequency}} {{/Frequency}}
+          </div>
+        </details>
+      </div>
+    </div>
+    {{/MiscInfo}} {{#FullDefinition}}
+    <div style="text-align: center">
+      <div lang="zh-Hant">
+        <details>
+          <summary>Full definition</summary>
+          <div class="full-def popup">{{FullDefinition}}</div>
+        </details>
+      </div>
+    </div>
+    {{/FullDefinition}}
+  </div>
+</main>
+
+<!----------- Footer ------------->
+<footer>
+  <div class="bot-container">
+    {{#Tags}}
+    <div lang="zh-Hant" class="tags-container">
+      <div class="tags">{{Tags}}</div>
+    </div>
+    {{/Tags}}
+    <input type="checkbox" class="extras-toggle" />
+  </div>
+</footer>
+
+<!----------- Scripts ------------>
+<script>
+  function setLanguage(language) {
+    document.documentElement.lang = language;
+    const elements = document.querySelectorAll('[lang="zh-Hant"]');
+
+    elements.forEach((element) => {
+      element.setAttribute("lang", language);
+    });
+  }
+
+  function decode_pinyin(pinyin) {
+    // From Destroyer862K2 in https://www.reddit.com/r/Anki/comments/i6rmp6/chinese_flashcards_automatic_coloring_according/
+    const core = ["a", "e", "i", "o", "u", "ü"];
+    let arr = pinyin.replace(/<b>|<\/b>|<div>|<\/div>/g, "").split("");
+
+    is_core = function (c, c_previous_two = "", c_next = "") {
+      //pre conditions
+      if (
+        c == "r" &&
+        (c_next == " " || c_next == "") &&
+        c_previous_two != " " &&
+        c_previous_two != ""
+      ) {
+        return [true, true];
+      }
+      //pre conditions
+
+      c = c
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
+      for (let i = 0; i < core.length; i++) {
+        if (c === core[i]) {
+          return [true, false];
+        }
+      }
+      return [false, false];
+    };
+
+    get_tone = function (str) {
+      let pure = str.replace(/a|e|i|o|u|ü|r/g, "");
+      if (pure == "") {
+        return 5;
+      } else if (["ā", "ē", "ī", "ō", "ū", "ǖ"].includes(pure)) {
+        return 1;
+      } else if (["á", "é", "í", "ó", "ú", "ǘ"].includes(pure)) {
+        return 2;
+      } else if (["ǎ", "ě", "ǐ", "ǒ", "ǔ", "ǚ"].includes(pure)) {
+        return 3;
+      } else if (["à", "è", "ì", "ò", "ù", "ǜ"].includes(pure)) {
+        return 4;
+      }
+
+      return pure;
+    };
+
+    let tones_arr = [];
+    let buff = [];
+
+    flush = function () {
+      if (buff.length > 0) {
+        tones_arr.push(get_tone(buff.join("")));
+        buff = [];
+      }
+    };
+    for (let i = 0; i < arr.length; i++) {
+      let res = is_core(arr[i], arr[i - 2], arr[i + 1]);
+      if (res[1]) {
+        flush();
+      }
+      if (res[0]) {
+        buff.push(arr[i]);
+      } else {
+        flush();
+      }
+    }
+    if (buff.length > 0) {
+      tones_arr.push(get_tone(buff.join("")));
+      buff = [];
+    }
+    return tones_arr;
+  }
+
+  function containsZhuyin(str) {
+    const zhuyinRegex = /[\u3100-\u312F]/;
+    return zhuyinRegex.test(str);
+  }
+
+  function getTonePattern(reading) {
+    if (!containsZhuyin(reading)) {
+      console.log("pinyin reading, tone pattern:", decode_pinyin(reading));
+      return decode_pinyin(reading);
+    }
+
+    const zyTones = {
+      ˉ: 1,
+      ˊ: 2,
+      ˇ: 3,
+      ˋ: 4,
+      "˙": 5,
+    };
+
+    let tonePattern = [];
+
+    let ctr = 0;
+    for (char of reading) {
+      if (char in zyTones) {
+        tonePattern.push(zyTones[char]);
+        ctr = 0;
+      } else if (ctr >= 4) {
+        tonePattern.push(1);
+        ctr = 0;
+      }
+      ctr += 1;
+    }
+    console.log("zhuyin reading, tone pattern:", tonePattern);
+    return tonePattern;
+  }
+
+  function addToneColor(tonePattern, targetWordEl) {
+    const innerText = targetWordEl.innerText.split("");
+    let newInnerHtml = "";
+    if (tonePattern.length === targetWordEl.innerText.length) {
+      for (let i = 0; i < tonePattern.length; i++) {
+        newInnerHtml += `<span class="tone${tonePattern[i]}">${innerText[i]}</span>`;
+      }
+    } else {
+      return;
+    }
+    targetWordEl.innerHTML = newInnerHtml;
+  }
+
+  function paintTargetWord() {
+    const wordTranscription = `{{ExpressionReading}}`;
+    if (!wordTranscription) return;
+
+    const tonePattern = getTonePattern(wordTranscription);
+
+    const sentences = Array.from(
+      document.querySelectorAll(".sentence, .small-sentence")
+    );
+    for (const sentence of sentences) {
+      for (const targetWord of sentence.getElementsByTagName("b")) {
+        addToneColor(tonePattern, targetWord);
+      }
+    }
+
+    const vocabElement = document.querySelector(".vocab ruby rb");
+    if (vocabElement !== null) {
+      addToneColor(tonePattern, vocabElement);
+    }
+  }
+
+  function tweakHTML() {
+    // Modify translation button label
+    const tlButton = document.querySelector(".translation > a.hint");
+    if (tlButton) {
+      tlButton.innerText = "Show Translation";
+    }
+
+    // Split tags
+    const tagsContainer = document.querySelector(".tags-container");
+    const tags = `{{Tags}}`.split(" ");
+    if (tagsContainer) {
+      tagsContainer.innerHTML = "";
+      for (tag of tags) {
+        const tagElem = document.createElement("div");
+        tagElem.className = "tags";
+        tagElem.innerText = tag;
+        tagsContainer.appendChild(tagElem);
+      }
+    }
+
+    // Get stars
+    const freq = Number(`{{FreqSort}}`);
+    const stars = document.querySelector(".stars");
+    if (freq > 0 && freq < 1500) stars.innerText = "★★★★★";
+    else if (freq >= 1500 && freq < 5000) stars.innerText = "★★★★";
+    else if (freq >= 5000 && freq < 15000) stars.innerText = "★★★";
+    else if (freq >= 15000 && freq < 30000) stars.innerText = "★★";
+    else if (freq >= 30000 && freq < 60000) stars.innerText = "★";
+    else stars.innerText = "";
+
+    if (freq === 0) document.querySelector(".top-container").innerHTML = "";
+
+    // Toggle extras display
+    const checkBox = document.querySelector(".extras-toggle");
+    const extras = document.querySelector(".extras");
+    checkBox.addEventListener("change", (e) => {
+      extras.style.display = checkBox.checked ? "block" : "none";
+    });
+    extras.style.display = checkBox.checked ? "block" : "none";
+  }
+
+  function cleanDictDef(element) {
+    let cleanedElement = element.cloneNode(true);
+
+    const hide = (selector) => {
+      const target = cleanedElement.querySelector(selector);
+      if (target) target.style.display = "none";
+    };
+
+    const containsText = (text) => cleanedElement.innerHTML.includes(text);
+
+    // Remove headword
+    // hide("*[data-sc-cccedict='headword']");
+    // if (
+    //   cleanedElement.querySelector(
+    //     "span+div[data-sc-name='definition'], span+div[data-sc-name='意味']"
+    //   )
+    // ) {
+    //   hide(":scope > span > span");
+    // } else {
+    //   const regex = /(<i>.*?<\/i>)(.*?)(<br>)/;
+    //   cleanedElement.innerHTML = cleanedElement.innerHTML.replace(regex, "");
+    // }
+
+    // Remove dict name
+    hide(":scope > i:first-child");
+
+    // Remove images
+    const minImageWidthEm = 130;
+    cleanedElement.querySelectorAll("a > span > img").forEach((img) => {
+      const anchor = img.closest("a");
+      const width = parseFloat(img.parentNode.style.width.replace("em", ""));
+      if (width > minImageWidthEm) {
+        anchor.remove();
+      } else {
+        anchor.removeAttribute("href");
+      }
+    });
+
+    // Remove extra newlines, etc.
+    cleanedElement.innerHTML = cleanedElement.innerHTML
+      .replace(/(<br>\s*)+/gi, "<br>")
+      .replace(/^<br\s*\/?>|<br\s*\/?>$/g, "")
+      .replace("筆順：", "");
+    Array.from(cleanedElement.children).forEach((e) => {
+      e.innerHTML = e.innerHTML.replace(/^<br\s*\/?>|<br\s*\/?>$/g, "");
+    });
+
+    return cleanedElement;
+  }
+
+  function createDictDef(dictEntry) {
+    const dictDefContainer = document.createElement("div");
+    dictDefContainer.classList.add("dict-def");
+
+    const textContainer = document.createElement("div");
+    textContainer.classList.add("text-container");
+    const imagesContainer = document.createElement("div");
+    imagesContainer.classList.add("images-container");
+
+    const minImageWidthEm = 131;
+    dictEntry.querySelectorAll("a > span > img").forEach((img) => {
+      let width = parseFloat(img.parentNode.style.width.replace("em", ""));
+      if (width > minImageWidthEm) {
+        const image = document.createElement("img");
+        const anchor = img.closest("a");
+        image.src = img.src;
+        imagesContainer.appendChild(image);
+      }
+    });
+
+    const ul = dictEntry.querySelector(":scope > ul");
+    const cleanedElement = cleanDictDef(
+      ul !== null ? ul.querySelector("li") : dictEntry
+    );
+    textContainer.innerHTML = cleanedElement.innerHTML;
+
+    dictDefContainer.appendChild(textContainer);
+    dictDefContainer.appendChild(imagesContainer);
+    return dictDefContainer;
+  }
+
+  function createDefinition(dictName) {
+    if (isJidoujisho || dictName.toLowerCase().includes("maindefinition")) {
+      return dictEntries[dictName];
+    } else {
+      return createDictDef(dictEntries[dictName]);
+    }
+  }
+
+  function initializeDef(priorityDicts, ignoredDicts) {
+    isJidoujisho = `{{Tags}}`.includes("Yuuna");
+    const fullDefContainer = document.querySelector(".full-def");
+    const definitionContainer = document.querySelector(
+      ".main-def > .definition"
+    );
+    const liEntries = fullDefContainer.querySelectorAll(
+      ":scope > div > ol > li"
+    );
+    const allEntries =
+      liEntries.length > 0
+        ? liEntries
+        : [fullDefContainer.querySelector("div")];
+
+    dictEntries = Array.from(allEntries).reduce((entries, entry) => {
+      let dictName;
+      if (entry?.querySelector(":scope > i:first-child")) {
+        dictName = entry.querySelector(":scope > i:first-child").innerText;
+      } else if (isJidoujisho) {
+        dictName = "Jidoujisho";
+      } else {
+        dictName = "FullDefinition";
+      }
+
+      let newName = dictName;
+      let ctr = 2;
+
+      if (ignoredDicts.some((name) => newName.includes(name))) {
+        // skip
+      } else if (newName === "Jidoujisho") {
+        const jidoujishoEntries = `{{FullDefinition}}`.split("<br><br>");
+        jidoujishoEntries.forEach((entry) => {
+          const match = /(?<!\S)【(.*?)】<br>/.exec(entry);
+          if (match) {
+            dictName = `(${match[1]})`;
+            newName = `(${match[1]})`;
+            entry = entry.replace(`【${match[1]}】<br>`, "");
+          }
+
+          const match2 = /^(.*?)<br>/.exec(entry);
+          if (
+            match2 &&
+            `{{ExpressionReading}}`
+              .split("")
+              .every((char) => match2[1].includes(char))
+          ) {
+            entry = entry.replace(/.*?<br>/i, "");
+          }
+
+          while (Object.keys(entries).includes(newName)) {
+            newName = `${dictName}-${ctr}`;
+            ctr += 1;
+          }
+          const jidouDiv = document.createElement("div");
+          jidouDiv.innerHTML = entry;
+          jidouDiv.classList.add("dict-def");
+          entries[newName] = jidouDiv;
+        });
+      } else if (newName === "FullDefinition") {
+        const fullDefDiv = document.createElement("div");
+        fullDefDiv.innerHTML = `{{FullDefinition}}`;
+        entries[newName] = fullDefDiv;
+      } else {
+        while (Object.keys(entries).includes(newName)) {
+          newName = `${dictName}-${ctr}`;
+          ctr += 1;
+        }
+        entries[newName] = entry;
+      }
+
+      return entries;
+    }, {});
+
+    if (`{{MainDefinition}}`) {
+      const mainDefDiv = document.createElement("div");
+      mainDefDiv.innerHTML = `{{MainDefinition}}`;
+      dictEntries["MainDefinition"] = mainDefDiv;
+    }
+
+    dictNames = Object.keys(dictEntries);
+
+    if (priorityDicts) {
+      dictNames = dictNames.sort((a, b) => {
+        const indexA = priorityDicts.findIndex((item) =>
+          a.toLowerCase().includes(item.toLowerCase())
+        );
+        const indexB = priorityDicts.findIndex((item) =>
+          b.toLowerCase().includes(item.toLowerCase())
+        );
+
+        if (indexA === -1 && indexB === -1) return 0;
+        else if (indexA === -1) return 1;
+        else if (indexB === -1) return -1;
+
+        return indexA - indexB;
+      });
+    }
+    definitionContainer.innerHTML = "";
+    definitionContainer.appendChild(createDefinition(dictNames[0]));
+  }
+
+  function toggleDef(index) {
+    const definitionContainer = document.querySelector(
+      ".main-def > .definition"
+    );
+
+    const indexDisplay = document.querySelector(".def-info");
+    indexDisplay.style.opacity = 1;
+
+    currentIndex = index % dictNames.length;
+    while (currentIndex < 0) currentIndex += dictNames.length;
+
+    indexDisplay.innerText = `${dictNames[currentIndex]} ${currentIndex + 1}/${
+      dictNames.length
+    }`;
+
+    definitionContainer.innerHTML = "";
+    definitionContainer.appendChild(createDefinition(dictNames[currentIndex]));
+  }
+
+  function setUpDefToggle() {
+    const mainDefContainer = document.querySelector(".main-def");
+
+    const leftEdge = document.createElement("div");
+    const rightEdge = document.createElement("div");
+    leftEdge.classList.add("left-edge");
+    rightEdge.classList.add("right-edge");
+    mainDefContainer.appendChild(leftEdge);
+    mainDefContainer.appendChild(rightEdge);
+
+    let index = 0;
+
+    leftEdge.addEventListener("click", (e) => {
+      index -= 1;
+      toggleDef(index);
+    });
+
+    rightEdge.addEventListener("click", (e) => {
+      index += 1;
+      toggleDef(index);
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") index -= 1;
+      else if (e.key === "ArrowRight") index += 1;
+
+      toggleDef(index);
+    });
+  }
+
+  function setUpImageModal() {
+    const modalBg = document.querySelector(".modal-bg");
+    const imgPopup = document.querySelector(".img-popup");
+    const image = document.querySelector(".image img");
+
+    if (!image) return;
+
+    image.addEventListener("click", () => {
+      const imgPopupContainer = document.createElement("div");
+      const imgPopupImg = document.createElement("img");
+
+      imgPopupContainer.classList.add("img-popup-container");
+      imgPopupImg.src = image.src;
+      imgPopupImg.classList.add("img-popup-img");
+
+      if (image.height > image.width) {
+        imgPopupContainer.style.height = "calc(100% - 20px)";
+        imgPopupContainer.style.width = "max-content";
+      }
+      imgPopup.innerHTML = "";
+      imgPopup.appendChild(imgPopupContainer);
+      imgPopupContainer.appendChild(imgPopupImg);
+
+      document.body.classList.add("img-popup");
+      modalBg.style.display = "block";
+      imgPopupContainer.style.display = "flex";
+    });
+
+    modalBg.addEventListener("click", () => {
+      document.body.classList.remove("img-popup");
+      modalBg.style.display = "none";
+      imgPopup.innerHTML = "";
+    });
+  }
+
+  function initialize() {
+    // Global vars
+    let isJidoujisho;
+    let dictEntries;
+    let dictNames;
+
+    // Set to "zh-Hans" for Simplified Chinese
+    const language = "zh-Hant";
+
+    setLanguage(language);
+    tweakHTML();
+    paintTargetWord();
+    setUpImageModal();
+    setUpDefToggle();
+
+    let priorityDicts = [
+      "MainDefinition",
+      "CC-CEDICT",
+      "Wenlin ABC",
+      "中日大辞典",
+    ];
+
+    let ignoredDicts = ["子", "句", "造"];
+    initializeDef(priorityDicts, ignoredDicts);
+  }
+
+  initialize();
+</script>

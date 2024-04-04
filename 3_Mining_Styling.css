@@ -1,0 +1,451 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Sans+TC:wght@100..900&family=Noto+Serif+SC&family=Noto+Serif+TC&display=swap");
+
+:root {
+  --font-serif-tc: "Noto Serif TC", "Noto Serif SC", serif;
+  --font-sans-tc: "Noto Sans TC", "Noto Sans SC", sans-serif;
+  --font-serif-sc: "Noto Serif SC", "Noto Serif TC", serif;
+  --font-sans-sc: "Noto Sans SC", "Noto Serif TC", sans-serif;
+  --max-width: 800px;
+  --color-tone-1: #ff8080;
+  --color-tone-2: #80ff81;
+  --color-tone-3: #8080ff;
+  --color-tone-4: #df80ff;
+  --color-tone-5: #7d8590;
+  font-size: var(--main-font-size);
+}
+
+:root:not([lang]) {
+  --font-serif: var(--font-serif-tc);
+  --font-sans: var(--font-sans-tc);
+}
+
+:root:lang(zh-Hant) {
+  --font-serif: var(--font-serif-tc);
+  --font-sans: var(--font-sans-tc);
+}
+
+:root:lang(zh-Hans) {
+  --font-serif: var(--font-serif-sc);
+  --font-sans: var(--font-sans-sc);
+}
+
+html.win,
+html.mac,
+html.linux:not(.android) {
+  --main-font-size: 16px;
+  --main-def-size: 18px;
+  --vocab-font-size: 45px;
+  --sentence-font-size: 36px;
+}
+
+html.mobile {
+  --main-font-size: 16px;
+  --main-def-size: 16px;
+  --vocab-font-size: 40px;
+  --sentence-font-size: 32px;
+}
+
+.card:not(.nightMode) {
+  --canvas: #fafaf7;
+  --canvas-elevated: #f0f0eb;
+  --canvas-inset: #d9d9d9;
+  --fg: #000000;
+  --fg-subtle: #40403e;
+  --fg-disabled: #666664;
+  --border-subtle: #999999;
+  --bold: #999999;
+  --color-tone-1: #e30000;
+  --color-tone-2: #02b31d;
+  --color-tone-3: #1510f0;
+  --color-tone-4: #8901bf;
+  --color-tone-5: #777777;
+  background-color: var(--canvas);
+}
+
+.card.nightMode {
+  --canvas: #1c2127;
+  --canvas-elevated: #282c34;
+  --canvas-inset: #47526640;
+  --fg: #dadada;
+  --fg-subtle: #7d8590;
+  --fg-disabled: #959da5;
+  --border-subtle: #35393e;
+  --bold: #7d8590;
+  --color-tone-1: #ff8080;
+  --color-tone-2: #80ff81;
+  --color-tone-3: #8080ff;
+  --color-tone-4: #df80ff;
+  --color-tone-5: #7d8590;
+  background-color: var(--canvas);
+}
+
+#qa {
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+  min-height: calc(100vh - 40px);
+  font-family: var(--font-serif);
+  font-size: var(--main-font-size);
+  text-align: center;
+}
+
+/* ------- Mobile css ------- */
+@media (max-width: 512px) {
+  .dict-def {
+    flex-direction: column;
+  }
+  .images-container {
+    justify-content: space-around;
+    flex-direction: row;
+    max-width: 100%;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .images-container img {
+    width: 44%;
+  }
+  .def-info {
+    top: -1.5rem !important;
+  }
+}
+
+/* ----- Front elements ----- */
+
+.vocab {
+  font-size: var(--vocab-font-size);
+}
+.sentence {
+  font-size: var(--sentence-font-size);
+  display: inline-block;
+}
+#hint {
+  margin-top: -5px;
+}
+
+/* ----- Back elements ----- */
+
+/* Header */
+header {
+  color: var(--fg-subtle);
+  height: 40px;
+  text-align: right;
+  width: 100%;
+  font-size: 1rem;
+}
+.top-container {
+  max-width: calc(var(--max-width) + 20px);
+  margin: 0px auto;
+  width: calc(100% - 20px);
+}
+.stars {
+  margin: 0;
+  margin-bottom: -3px;
+}
+
+/* Info (audio, reading) */
+.info {
+  font-size: 1.75rem;
+}
+
+/* Replay button */
+.replay-button {
+  margin-top: -5px;
+}
+.replay-button svg {
+  width: 30px;
+  height: auto;
+}
+.replay-button svg path {
+  fill: var(--fg);
+}
+.replay-button svg circle {
+  display: none;
+}
+.replay-button:hover svg path {
+  fill: var(--fg-subtle);
+}
+.replay-button span {
+  padding: 0;
+  font-size: 1rem;
+}
+.replay-button span svg {
+  border-radius: 8px;
+  vertical-align: top;
+  min-width: 1rem;
+  min-height: 1rem;
+  background: var(--fg);
+}
+.replay-button span path {
+  fill: var(--canvas);
+}
+
+/* Reading */
+.reading {
+  display: inline;
+  font-family: var(--font-sans);
+  font-size: 0.9em;
+}
+
+/* Definition container */
+.main-def {
+  max-width: var(--max-width);
+  font-size: var(--main-def-size);
+  line-height: 1.75em;
+  margin: 25px 0px;
+  width: calc(100% - 20px);
+  position: relative;
+}
+
+/* Definition info display */
+.def-info {
+  position: absolute;
+  top: -2rem;
+  right: 10px;
+  font-size: 0.9rem;
+  color: var(--fg-subtle);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* MainDefinition */
+.definition {
+  text-align: left;
+  display: inline-block;
+}
+
+/* Dictionary definition */
+.dict-def {
+  text-align: left;
+  display: inline-flex;
+  gap: 1rem;
+  line-height: initial;
+  width: fit-content;
+  max-width: 100%;
+}
+.text-container {
+  flex-grow: 1;
+  max-width: 100%;
+}
+.text-container ul {
+  margin: 0;
+}
+.images-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 30%;
+}
+.images-container img {
+  max-width: 200px;
+  height: auto;
+}
+.images-container:empty {
+  display: none;
+}
+
+/* Image */
+.image img {
+  max-height: 200px;
+  width: auto;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Back sentence */
+.small-sentence {
+  font-size: 1.25rem;
+  display: inline-block;
+  width: calc(100% - 20px);
+  max-width: var(--max-width);
+}
+
+/* Translation button */
+a.hint {
+  font-family: var(--font-sans);
+  color: var(--fg-subtle);
+  width: fit-content;
+  font-size: 0.8rem;
+  display: block;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 5px 10px;
+  margin: 0 auto;
+  text-decoration: none;
+}
+a.hint:hover {
+  color: var(--fg);
+}
+
+/* Footer */
+footer {
+  margin-top: auto;
+  width: 100%;
+}
+.bot-container {
+  display: flex;
+  justify-content: flex-end;
+  max-width: calc(var(--max-width) + 20px);
+  margin: 0px auto;
+  width: calc(100% - 20px);
+}
+.tags-container {
+  flex-grow: 1;
+}
+.tags {
+  font-family: var(--font-sans);
+  background-color: var(--canvas-elevated);
+  color: var(--fg);
+  border: 1px solid var(--border-subtle);
+  display: inline-block;
+  padding: 1px 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 0.7rem;
+  line-height: 0.8rem;
+  margin: auto 3px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 30dvw;
+  white-space: nowrap;
+}
+
+.extras-toggle {
+  width: 12px;
+}
+
+/* ----- Extras ----- */
+
+/* Hide extra info by default */
+.extras {
+  display: none;
+}
+
+/* Popup CSS */
+.popup {
+  font-family: var(--font-sans);
+  border: 1px solid var(--border-subtle);
+  background-color: var(--canvas-elevated);
+  display: inline-block;
+  border-radius: 8px;
+  padding: 10px;
+  max-width: min(var(--max-width), calc(100% - 20px));
+}
+
+/* Misc. info */
+.misc-info ul {
+  margin: 0;
+}
+
+/* Full definition */
+.full-def {
+  font-family: var(--font-sans);
+  text-align: left;
+  display: inline-flex;
+}
+.full-def ol {
+  margin: 0;
+}
+
+/* ----- Misc ----- */
+
+/* Furigana */
+.show-furigana > ruby rt {
+  opacity: 1;
+}
+ruby rt {
+  user-select: none;
+  opacity: 0;
+  font-family: var(--font-sans);
+  font-size: 0.4em;
+}
+ruby:hover rt {
+  opacity: 1;
+}
+
+/* Bold */
+b {
+  color: var(--bold);
+  font-weight: 400;
+}
+b > ruby rt {
+  opacity: 1;
+}
+
+/* Dropdown */
+details {
+  font-family: var(--font-sans);
+  margin: 5px 0px;
+}
+summary {
+  user-select: none;
+  cursor: pointer;
+  width: fit-content;
+  margin: 0px auto;
+}
+
+/* Tone coloring */
+.tone1 {
+  color: var(--color-tone-1);
+}
+.tone2 {
+  color: var(--color-tone-2);
+}
+.tone3 {
+  color: var(--color-tone-3);
+}
+.tone4 {
+  color: var(--color-tone-4);
+}
+.tone5 {
+  color: var(--color-tone-5);
+}
+
+/* Definition toggle css */
+.left-edge,
+.right-edge {
+  position: absolute;
+  top: 0;
+  width: 50px;
+  height: 100%;
+  cursor: pointer;
+  opacity: 0.4;
+}
+.left-edge {
+  left: 0;
+  border-radius: 8px 0px 0px 8px;
+}
+.right-edge {
+  right: 0;
+  border-radius: 0px 8px 8px 0px;
+}
+.left-edge:hover,
+.right-edge:hover {
+  background-color: var(--canvas-inset);
+  cursor: pointer;
+}
+
+/* Image modal css */
+.modal-bg {
+  position: fixed;
+  display: none;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  cursor: pointer;
+}
+.img-popup-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(calc(100% - 20px), calc(var(--max-width) + 200px));
+  display: none;
+  z-index: 1001;
+  overflow: hidden;
+}
+.img-popup-img {
+  width: 100%;
+}
