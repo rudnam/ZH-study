@@ -9,7 +9,8 @@ Script to convert Pinyin readings to Zhuyin and add entries for Traditional term
 1. Clone this repository
 
    ```shell
-   git clone https://github.com/rudnam/convert-dict-to-zhuyin.git
+   git clone https://github.com/rudnam/ZH-study.git
+   cd ./scripts/add-tw-support
    ```
 
 2. Paste the dictionaries to convert (.zip) into the `dicts` folder.
