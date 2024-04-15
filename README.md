@@ -3,6 +3,8 @@
 - [Anki Mining Template](#anki-mining-template)
 - [Traditional HSK Deck](#traditional-hsk-deck)
 - [Zhuyin Yomitan Dictionaries](#zhuyin-yomitan-dictionaries)
+- [Scripts](#scripts)
+  - [Add TW support](#add-tw-support)
 
 ## Anki Mining Template
 
@@ -105,10 +107,20 @@ Changes:
 
 ## Zhuyin Yomitan Dictionaries
 
-Yomitan dictionaries from [MarvNC](https://github.com/MarvNC/yomichan-dictionaries?tab=readme-ov-file#mandarin-chinese) with readings in Zhuyin instead of Pinyin. Made using this [script](https://github.com/rudnam/convert-dict-to-zhuyin).
+Yomitan dictionaries from [MarvNC](https://github.com/MarvNC/yomichan-dictionaries?tab=readme-ov-file#mandarin-chinese) with readings in Zhuyin instead of Pinyin. Made using this [script](#add-tw-support).
 
 [GDrive Folder](https://drive.google.com/drive/folders/17sRcoVs_M3-RFBxyxSfV2HGqFv5bWFqU?usp=sharing)
 
 <p align="center">
     <img src="./images/zhuyin_dict.png" width="70%" />
 </p>
+
+## Scripts
+
+Utility scripts for Chinese.
+
+### add-tw-support
+
+Script to convert Pinyin readings to Zhuyin and add entries for Traditional terms in Yomitan dictionaries. [Link](https://github.com/rudnam/ZH-study/tree/main/scripts/add-tw-support)
+
+![alt text](./scripts/add-tw-support/image.png)

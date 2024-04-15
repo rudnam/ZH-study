@@ -1,6 +1,6 @@
 # add-tw-support
 
-Script to convert Pinyin readings to Zhuyin and add entries for Traditional terms for Yomitan dictionaries
+Script to convert Pinyin readings to Zhuyin and add entries for Traditional terms in Yomitan dictionaries
 
 ![alt text](image.png)
 
@@ -20,3 +20,12 @@ Script to convert Pinyin readings to Zhuyin and add entries for Traditional term
    npm install
    npx ts-node add-tw-support.ts
    ```
+
+## Options
+
+You can toggle pinyin-zhuyin conversion and adding entries for traditional terms by specifying like so:
+
+```shell
+npx ts-node add-tw-support.ts --no-zhuyin # Don't convert to Zhuyin
+npx ts-node add-tw-support.ts --no-trad   # Don't append traditional entries
+```

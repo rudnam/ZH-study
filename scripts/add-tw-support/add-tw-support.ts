@@ -4,13 +4,14 @@ import archiver from "archiver";
 import { createWriteStream } from "fs";
 import AdmZip from "adm-zip";
 import { pinyinToZhuyin, updateToAppend } from "./utils";
+import minimist from "minimist";
 
 const dictPath = "./dicts";
 const convertedDictPath = "./converted-dicts";
 
-// Toggle behavior here
-let addTradEntries = true;
-let convertToZhuyin = false;
+const argv: minimist.ParsedArgs = minimist(process.argv.slice(2));
+let addTradEntries = argv.trad ?? true;
+let convertToZhuyin = argv.zhuyin ?? true;
 
 (async () => {
   try {
