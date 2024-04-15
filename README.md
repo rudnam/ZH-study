@@ -1,6 +1,8 @@
 # ZH-study
 
 - [Anki Mining Template](#anki-mining-template)
+  - [Yomichan fields](#yomichan-fields)
+  - [Other applications](#other-applications)
 - [Traditional HSK Deck](#traditional-hsk-deck)
 - [Zhuyin Yomitan Dictionaries](#zhuyin-yomitan-dictionaries)
 - [Scripts](#scripts)
