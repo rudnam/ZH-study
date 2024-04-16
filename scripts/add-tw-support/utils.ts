@@ -4,6 +4,7 @@ import { pinyinToZhuyin as pyToZy } from "pinyin-zhuyin";
 const simpToTrad: { [key: string]: string } = JSON.parse(
   readFileSync("./simpToTrad.json", "utf8")
 );
+const tradValues = Object.values(simpToTrad);
 
 const cleanUpPinyin = (reading: string) => {
   const replacements = {
@@ -34,21 +35,25 @@ const pinyinToZhuyin = (reading: string) => {
   return reading;
 };
 
-const updateToAppend = (toAppend: Array<any>, term: Array<any>) => {
-  if (term[0] in simpToTrad) {
+const updateTradTerms = (
+  tradTerms: {
+    toAppend: Array<any>;
+    existing: Array<string>;
+  },
+  term: Array<any>
+) => {
+  if (tradValues.includes(term[0])) {
+    tradTerms.existing.push(term[0]);
+  } else if (
+    term[0] in simpToTrad &&
+    !tradTerms.existing.includes(simpToTrad[term[0]])
+  ) {
     const tradTerm = JSON.parse(JSON.stringify(term));
     tradTerm[0] = simpToTrad[term[0]];
-    toAppend.push(tradTerm);
+    tradTerms.toAppend.push(tradTerm);
   }
 
-  const indexToRemove = toAppend.findIndex(
-    (tradTerm) => tradTerm[0] === term[0]
-  );
-  if (indexToRemove !== -1) {
-    toAppend.splice(indexToRemove, 1);
-  }
-
-  return toAppend;
+  return tradTerms;
 };
 
-export { pinyinToZhuyin, updateToAppend };
+export { pinyinToZhuyin, updateTradTerms };
