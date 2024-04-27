@@ -79,7 +79,7 @@ const addTWSupport = () => {
           );
           const totalTerms = zipEntries.reduce(
             (totalTerms, entry) =>
-              entry.name.match(/term_bank|term_meta_bank/)
+              entry.name.match(/^term_bank|^term_meta_bank/)
                 ? JSON.parse(zip.readAsText(entry)).length + totalTerms
                 : totalTerms,
             0
@@ -102,7 +102,7 @@ const addTWSupport = () => {
             if (
               zipEntry.isDirectory ||
               !zipEntry.name.endsWith(".json") ||
-              !zipEntry.name.match(/index|term_bank|term_meta_bank/)
+              !zipEntry.name.match(/^index|^term_bank|^term_meta_bank/)
             ) {
               continue;
             }
