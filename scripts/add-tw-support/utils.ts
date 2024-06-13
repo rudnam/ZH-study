@@ -1,5 +1,5 @@
 import { readFileSync } from "fs";
-import { pinyinToZhuyin as pyToZy } from "pinyin-zhuyin";
+import { convertToZhuyin } from "./chinese_to_zhuyin";
 
 const simpToTrad: { [key: string]: string } = JSON.parse(
   readFileSync("./simpToTrad.json", "utf8")
@@ -27,12 +27,15 @@ const cleanUpPinyin = (reading: string) => {
   return reading;
 };
 
-const pinyinToZhuyin = (reading: string) => {
-  reading = cleanUpPinyin(reading);
-  reading = pyToZy(reading);
-  reading = reading.replace(/\s|\*|\-|\…/g, "");
+const pinyinToZhuyin = async (reading: string) => {
+  // reading = cleanUpPinyin(reading);
 
-  return reading;
+  let zhuyin = await convertToZhuyin(reading);
+  if (zhuyin) {
+    return zhuyin.replace(/\s|\*|\-|\…/g, "");
+  } else {
+    return null;
+  }
 };
 
 const updateTradTerms = (

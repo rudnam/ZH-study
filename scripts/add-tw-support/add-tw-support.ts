@@ -51,7 +51,7 @@ const addTWSupport = () => {
         // Set up archiver
         const output = fs.createWriteStream(dictOutputPath);
         const archive = archiver("zip", { zlib: { level: 9 } });
-        await new Promise<void>((resolve, reject) => {
+        await new Promise<void>(async (resolve, reject) => {
           output.on("close", () => {
             console.log(
               `Finished converting ${dictName}, Total size: ${
@@ -133,7 +133,7 @@ const addTWSupport = () => {
               let termBankJson = JSON.parse(jsonData);
               for (const term of termBankJson) {
                 if (convertToZhuyin && termBankName === "term_bank") {
-                  term[1] = pinyinToZhuyin(term[1]);
+                  term[1] = (await pinyinToZhuyin(term[0])) || term[1];
                 }
                 if (addTradEntries) {
                   tradTerms = updateTradTerms(tradTerms, term);

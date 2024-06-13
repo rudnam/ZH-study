@@ -199,8 +199,10 @@
   }
 
   function containsZhuyin(str) {
-    const zhuyinRegex = /[\u3100-\u312F]/;
-    return zhuyinRegex.test(str);
+    const zyChars =
+      "ˉˊˇˋ˙ㄅㄆㄇㄈㄉㄊㄋㄌㄍㄎㄏㄐㄑㄒㄓㄔㄕㄖㄗㄘㄙㄚㄛㄜㄝㄞㄟㄠㄡㄢㄣㄤㄥㄦㄧㄨㄩㄪㄫㄬㄭㄮㄯ";
+    const zyRegex = new RegExp(`[${zyChars}]`);
+    return zyRegex.test(str);
   }
 
   function getTonePattern(reading) {
@@ -209,6 +211,12 @@
       return decode_pinyin(reading);
     }
 
+    const separators = " '";
+
+    reading = [...reading]
+      .filter((c) => containsZhuyin(c) || separators.includes(c))
+      .join("");
+
     const zyTones = {
       ˉ: 1,
       ˊ: 2,
@@ -216,20 +224,66 @@
       ˋ: 4,
       "˙": 5,
     };
+    const zyConsonants = "ㄅㄆㄇㄈㄉㄊㄋㄌㄍㄎㄏㄐㄑㄒㄓㄔㄕㄖㄗㄘㄙ";
+    const zyFalseInitials = "ㄨㄧㄩ";
+    const zySentence = `{{Sentence}}`;
 
     let tonePattern = [];
+    let buff = [];
 
-    let ctr = 0;
-    for (char of reading) {
-      if (char in zyTones) {
-        tonePattern.push(zyTones[char]);
-        ctr = 0;
-      } else if (ctr >= 4) {
+    for (const char of reading) {
+      console.log(
+        char,
+        buff,
+        char in zyTones && buff.length > 0,
+        char === " " && buff.length > 0,
+        zyFalseInitials.includes(char) &&
+          buff.length > 0 &&
+          !(buff.length === 1 && zyConsonants.includes(buff[0])),
+        zyConsonants.includes(char) && buff.length > 0
+      );
+      if (char in zyTones && buff.length > 0) {
+        const isEr =
+          buff.length === 1 &&
+          buff[0] === "ㄦ" &&
+          char === "˙" &&
+          !zySentence.includes("兒");
+        const isZherr =
+          buff.length === 2 && char === "ˋ" && buff.join("") === "ㄓㄦ";
+
+        if (isEr) {
+          // pass
+        } else if (isZherr) {
+          tonePattern.push(zyTones[char]);
+          tonePattern.push(5);
+        } else {
+          tonePattern.push(zyTones[char]);
+        }
+        buff = [];
+      } else if (separators.includes(char) && buff.length > 0) {
         tonePattern.push(1);
-        ctr = 0;
+        buff = [];
+      } else if (
+        zyFalseInitials.includes(char) &&
+        buff.length > 0 &&
+        !(buff.length === 1 && zyConsonants.includes(buff[0]))
+      ) {
+        tonePattern.push(1);
+
+        buff = [char];
+      } else if (zyConsonants.includes(char) && buff.length > 0) {
+        tonePattern.push(1);
+
+        buff = [char];
+      } else {
+        if (!separators.includes(char)) {
+          buff.push(char);
+        }
       }
-      ctr += 1;
     }
+
+    if (buff.length > 0) tonePattern.push(1);
+
     console.log("zhuyin reading, tone pattern:", tonePattern);
     return tonePattern;
   }
@@ -320,13 +374,14 @@
     const containsText = (text) => cleanedElement.innerHTML.includes(text);
 
     // Remove headword
-    // hide("*[data-sc-cccedict='headword']");
-    // if (
-    //   cleanedElement.querySelector(
-    //     "span+div[data-sc-name='definition'], span+div[data-sc-name='意味']"
-    //   )
-    // ) {
-    //   hide(":scope > span > span");
+    hide("*[data-sc-cccedict='headword']");
+    if (
+      cleanedElement.querySelector(
+        "span+div[data-sc-name='definition'], span+div[data-sc-name='意味']"
+      )
+    ) {
+      hide(":scope > span > span");
+    }
     // } else {
     //   const regex = /(<i>.*?<\/i>)(.*?)(<br>)/;
     //   cleanedElement.innerHTML = cleanedElement.innerHTML.replace(regex, "");
@@ -390,9 +445,44 @@
     return dictDefContainer;
   }
 
+  function createCedictDef(cedictEntries) {
+    const cedictDefContainer = document.createElement("div");
+    cedictDefContainer.classList.add("cedict-def");
+
+    let newHtml = cedictEntries
+      .map((dictEntry) => {
+        const ul = dictEntry.querySelector("ul");
+        if (ul !== null) {
+          return cedictEntries.length > 1
+            ? `<li>${ul.outerHTML}</li>`
+            : ul.outerHTML;
+        } else {
+          const innerText = Array.from(dictEntry.childNodes)
+            .filter((node) => node.nodeType === Node.TEXT_NODE)
+            .map((node) => node.textContent.trim())
+            .join(" ");
+          return cedictEntries.length > 1 ? `<li>${innerText}</li>` : innerText;
+        }
+      })
+      .join("");
+    if (cedictEntries.length > 1) {
+      newHtml = `<ol>${newHtml}</ol>`;
+    }
+    cedictDefContainer.innerHTML = newHtml;
+    return cedictDefContainer;
+  }
+
   function createDefinition(dictName) {
     if (isJidoujisho || dictName.toLowerCase().includes("maindefinition")) {
       return dictEntries[dictName];
+    } else if (dictName.toLowerCase().includes("cedict")) {
+      let cedictEntries = [];
+      Object.entries(dictEntries).forEach(([name, entry]) => {
+        if (name.toLowerCase().includes("cedict") && !name.includes("forms")) {
+          cedictEntries.push(entry);
+        }
+      });
+      return createCedictDef(cedictEntries);
     } else {
       return createDictDef(dictEntries[dictName]);
     }
@@ -478,6 +568,15 @@
     }
 
     dictNames = Object.keys(dictEntries);
+    if (
+      !isJidoujisho &&
+      dictNames.toString().toLowerCase().includes("cedict")
+    ) {
+      dictNames = dictNames.filter(
+        (name) => !name.toLowerCase().includes("cedict")
+      );
+      // dictNames.unshift("(Cedict)");
+    }
 
     if (priorityDicts) {
       dictNames = dictNames.sort((a, b) => {
