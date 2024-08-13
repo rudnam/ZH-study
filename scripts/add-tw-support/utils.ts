@@ -1,5 +1,5 @@
 import { readFileSync } from "fs";
-import { pinyinToZhuyin as pyToZy } from "pinyin-zhuyin";
+import zhuyin from "zhuyin-improved";
 
 const simpToTrad: { [key: string]: string } = JSON.parse(
   readFileSync("./simpToTrad.json", "utf8")
@@ -29,7 +29,7 @@ const cleanUpPinyin = (reading: string) => {
 
 const pinyinToZhuyin = (reading: string) => {
   reading = cleanUpPinyin(reading);
-  reading = pyToZy(reading);
+  reading = zhuyin(reading).join('');
   reading = reading.replace(/\s|\*|\-|\…/g, "");
 
   return reading;

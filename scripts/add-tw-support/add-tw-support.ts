@@ -33,10 +33,10 @@ const addTWSupport = () => {
         const dictName = path.basename(dictFile, path.extname(dictFile));
         const stringToAppend = convertToZhuyin
           ? dictName.includes("[ZH-EN]")
-            ? " (Zhuyin)"
+            ? " (Chu-yin)"
             : dictName.includes("[ZH-")
-            ? " (注音)"
-            : ""
+              ? " (注音)"
+              : ""
           : "";
         const dictOutputPath = path.join(
           convertedDictPath,
@@ -54,8 +54,7 @@ const addTWSupport = () => {
         await new Promise<void>((resolve, reject) => {
           output.on("close", () => {
             console.log(
-              `Finished converting ${dictName}, Total size: ${
-                archive.pointer() / 1e6
+              `Finished converting ${dictName}, Total size: ${archive.pointer() / 1e6
               } Megabytes.`
             );
             console.log("");
