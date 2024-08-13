@@ -1,1 +1,6 @@
-test_*
+node_modules/*
+converted-dicts
+dicts
+!node_modules/pinyin-split
+!node_modules/zhuyin-improved
+.vscode
